@@ -12,7 +12,7 @@ interface InputProps{
     formatPrice?: boolean;
     required?: boolean;
     register: UseFormRegister<FieldValues>, //This is a field for the react hook form
-    errors?: FieldErrors; 
+    errors: FieldErrors; 
 }
 
 const Input:React.FC<InputProps> = ({
@@ -31,7 +31,7 @@ const Input:React.FC<InputProps> = ({
                 <BiDollar 
                     size={24}
                     className="
-                        text-netural-700
+                        text-neutral-700
                         absolute
                         top-5
                         left-2

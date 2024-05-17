@@ -5,13 +5,15 @@ import { useRouter } from "next/navigation"; // Import useRouter from next/route
 
 
 const Logo = () => {
+    const router = useRouter();
     return (
         <Image 
+            onClick={() => router.push('/')}
             alt="Airbnb Logo"
             className="hidden md:block cursor-pointer"
             height="100"
             width="100"
-            src="/images/airbnb_logo.png"
+            src="/Images/airbnb_logo.png"
         /> // Use Image component from next/image
     );
 }

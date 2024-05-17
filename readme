@@ -4,3 +4,38 @@ react-icons
 zustand
 axios
 react-hot-toast
+npm install prisma
+npx prisma init
+npm install query-string
+
+//Authentication
+npm install next-auth @prisma/client @next-auth/prisma-adapter
+npm install bcrypt
+npm install -D @types/bcrypt //Since bcrypt does not comes with types
+
+//Countries
+npm install world-countires
+npm install react-select
+
+//Map
+npm install leaflet
+npm install -D @types/leaflet
+npm install react-leaflet
+
+//Image Upload
+npm install next-cloudinary
+
+//Listing Card
+npm install date-fns
+
+//Listing Reservation
+npm install react-date-range
+npm install -D @types/react-date-range
+
+//Loader
+npm install react-spinners
+
+Essential Prisma Commands:
+npx pisma db push
+
+

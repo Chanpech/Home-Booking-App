@@ -3,22 +3,49 @@
 import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from "../Avatar";
 import { useCallback, useState } from "react";
-import MenuItem from "./MenuItem";
-import useRegisterModal from "@/app/hooks/useRegisterModal";
+import { signOut } from "next-auth/react";
 
-const UserMenu = () => {
+import MenuItem from "./MenuItem";
+
+import useRegisterModal from "@/app/hooks/useRegisterModal";
+import useLoginModal from "@/app/hooks/useLoginModal";
+import useRentModal from "@/app/hooks/useRentModal";
+import { SafeUser } from "@/app/types";
+import { useRouter } from "next/navigation";
+
+interface UserMenuProps {
+    currentUser?: SafeUser | null;
+}
+
+
+const UserMenu: React.FC<UserMenuProps> = ({
+    currentUser
+}) => {
+    const router = useRouter(); // Get the router object
     const registerModal = useRegisterModal(); //Adding the functions from the useRegisterModal hook
+    const loginModal = useLoginModal(); //Adding the functions from the useLoginModal hook
+    const rentModal = useRentModal();
     const [isOpen, setIsOpen] = useState(false);      //Using States
 
     const toggleOpen = useCallback(() => {
         setIsOpen((value) => !value) //Returning the opposite of the current value
     }, []);
 
-    return (    
+    const onRent = useCallback(() =>{
+        
+        if(!currentUser){
+            return loginModal.onOpen();
+        }
+        console.log("Renting");
+        //Open rent modal
+        rentModal.onOpen();
+    }, [currentUser, loginModal, rentModal])
+
+    return (
         <div className="relative">
             <div className="flex flex-row items-center gap-3">
-                <div 
-                    onClick={() => {}}
+                <div
+                    onClick={onRent}
                     className="
                     hidden
                     md:block
@@ -53,7 +80,7 @@ const UserMenu = () => {
                 >
                     < AiOutlineMenu />
                     <div className="hidden md:block">
-                        <Avatar />
+                        <Avatar src={currentUser?.image} />
                     </div>
                 </div>
             </div>
@@ -61,7 +88,7 @@ const UserMenu = () => {
             {isOpen && (
                 <div
                     className="
-                    ablsolute
+                    absolute
                     rounded-xl
                     shadow-md
                     w-[40vw]
@@ -74,20 +101,52 @@ const UserMenu = () => {
                     "
                 >
                     <div className="flex flex-col cursor-pointer">
-                        <>
-                            <MenuItem 
-                                onClick={() => {}}
-                                label="Login"
-                            />
+                        {/* If there is a current user, show the logout button */}
+                        {currentUser ? (
+                             <>
                              <MenuItem 
+                                 onClick = {() => router.push("/trips")}
+                             label="My trips"
+                             />
+                             <MenuItem
+                                 onClick={() => router.push("/favorites")}
+                                 label="My favorites"
+                             />
+                             <MenuItem 
+                                 onClick = {() => router.push("/reservations")}
+                             label="My reservation"
+                             />
+                             <MenuItem
+                                 onClick={() => router.push("/properties")}
+                                 label="My properties"
+                             />
+                             <MenuItem 
+                                 onClick = {rentModal.onOpen}
+                             label="Airbnb my home"
+                             />
+                             <MenuItem
+                                 onClick={() => signOut()}
+                                 label="Logout"
+                             />
+                             </>
+                        ) : (
+                            <>
+                            <MenuItem 
+                                onClick = {loginModal.onOpen}
+                            label="Login"
+                            />
+                            <MenuItem
                                 onClick={registerModal.onOpen}
                                 label="Sign Up"
                             />
-                        </>
-                    </div>
+                            </>
+                        )}
+
                 </div>
-            )}
-        </div>
+                </div>
+    )
+}
+        </div >
     );
 }
 

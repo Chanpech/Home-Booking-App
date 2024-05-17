@@ -1,5 +1,57 @@
-export default function Home() {
+import getCurrentUser from "./actions/getCurrentUser";
+import getListings, { IListingsParams } from "./actions/getListings";
+
+import ClientOnly from "./components/ClientOnly";
+import Container from "./components/Container";
+import EmptyStage from "./components/EmptyState";
+import ListingCard from "./components/listings/ListingCard"
+
+interface HomeProps {
+   searchParams: IListingsParams;
+}
+
+const Home = async( { searchParams} : HomeProps) => { //This is a server component
+  const listings = await getListings(searchParams);
+  const currentUser = await getCurrentUser();
+
+  //Present the client with an empty stage when there is no listings that meet the criteria
+  if (listings.length === 0) {
+    return (
+      <ClientOnly>
+        <EmptyStage showReset />
+      </ClientOnly>
+    )
+  }
+
   return (
-    <div className="text-3xl font-bold underline">Hello Air Bnb </div>
+    <ClientOnly>
+      <Container>
+        <div className="
+         pt-24
+         grid
+         grid-cols-1
+         sm:grid-cols-2
+         md:grid-cols-3
+         lg:grid-cols-4
+         xl:grid-cols-5
+         2xl:grid-cols-6
+         gap-8
+        ">
+          {listings.map(( listing ) => {
+            return (
+              <ListingCard
+                currentUser={currentUser}
+                key={listing.id}
+                data={listing}
+              />
+            )
+          })
+          }
+        </div>
+      </Container>
+    </ClientOnly>
+
   );
 }
+
+export default Home;
